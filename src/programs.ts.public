@@ -1,0 +1,37 @@
+import { StartionId } from './stations';
+
+export type Program = {
+  title: string;
+  station_id: StartionId;
+  start_time: string;
+  end_time: string;
+};
+
+type dataConfig = {
+  programs: {
+    [key: string]: Program[];
+  };
+};
+
+/**
+ * 曜日に対応した番組表を返す関数
+ * @param day number
+ * @returns Program[]
+ */
+export function getProgramsList(day: number): Program[] {
+  // 番組リスト
+  const data: dataConfig = {
+    programs: {
+      '0': [],
+      '1': [],
+      '2': [],
+      '3': [],
+      '4': [],
+      '5': [],
+      '6': [],
+    },
+  };
+
+  // 曜日に対応した番組リストを返す
+  return data.programs[String(day)];
+}

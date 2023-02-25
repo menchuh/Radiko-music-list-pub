@@ -53,6 +53,9 @@ export function main(): void {
       });
     });
 
+    // 曲目リストが空の場合処理を終了する
+    if (addValues.length === 0) return;
+
     // スプレッドシートに追記
     saveDataToSheet(addValues);
   } catch (e) {
