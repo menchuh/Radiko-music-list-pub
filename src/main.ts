@@ -19,7 +19,7 @@ export function main(): void {
 
   try {
     // 曜日に対応した番組表を取得
-    const dayOfWeek = dayjs().day() - 1; // 前日を取得する
+    const dayOfWeek = dayjs().day() === 0 ? 6 : dayjs().day() - 1; // 前日を取得する
     const programs = getProgramsList(dayOfWeek);
 
     // 番組がない場合は処理を終了
