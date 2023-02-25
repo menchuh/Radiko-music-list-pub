@@ -1,0 +1,9 @@
+# Mac Os
+.DS_Store
+
+# direcrory
+node_modules
+dist
+
+# file
+.clasp.json
