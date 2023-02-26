@@ -1,6 +1,6 @@
 # Radiko-music-list
 
-## Ovewview
+## Overview
 
 A program that retrieves a list of songs broadcast on Radiko and records them in a Google Spreadsheet.
 
