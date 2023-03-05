@@ -2,10 +2,12 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import { getProgramsList, Program } from './programs';
 import { getRowData, saveDataToSheet } from './edit_sheets';
+import { operateSpotify } from './edit_playlist';
 
 /**
  * メイン関数
  * 曲目リストをスプレッドシートに追記する
+ * 曲をSpotifyのプレイリストに追加する
  * @returns void
  */
 export function main(): void {
@@ -55,6 +57,9 @@ export function main(): void {
 
     // 曲目リストが空の場合処理を終了する
     if (addValues.length === 0) return;
+
+    // Spotifyのプレイリストに追加する
+    operateSpotify(addValues);
 
     // スプレッドシートに追記
     saveDataToSheet(addValues);
