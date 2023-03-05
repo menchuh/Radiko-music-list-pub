@@ -7,10 +7,6 @@ export function operateSpotify(data: string[][]): void {
   // アクセストークンを取得
   const accessToken = getAccessToken();
 
-  // 環境変数の取得
-  const props = PropertiesService.getScriptProperties().getProperties();
-  const playlistId = props.PLAYLIST_ID;
-
   // 追加するTrackのUriを取得
   const trackUris = data
     .map((elm) => {
@@ -22,7 +18,7 @@ export function operateSpotify(data: string[][]): void {
       return elm !== '';
     });
 
-  addTracks(accessToken, trackUris, playlistId);
+  addTracks(accessToken, trackUris);
 }
 
 /**
@@ -99,11 +95,11 @@ function searchTrack(
 /**
  *
  */
-function addTracks(
-  accessToken: string,
-  trackUris: string[],
-  playlistId: string
-): void {
+function addTracks(accessToken: string, trackUris: string[]): void {
+  // 環境変数の取得
+  const props = PropertiesService.getScriptProperties().getProperties();
+  const playlistId = props.PLAYLIST_ID;
+
   // リクエスト
   const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
