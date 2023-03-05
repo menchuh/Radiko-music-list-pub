@@ -67,14 +67,7 @@ export function getProgramsList(day: number): Program[] {
       // 火曜日
       '2': [],
       // 水曜日
-      '3': [
-        {
-          title: '深夜の音楽食堂',
-          station_id: StartionId.YFM,
-          start_time: '0030',
-          end_time: '0100',
-        },
-      ],
+      '3': [],
       // 木曜日
       '4': [
         {

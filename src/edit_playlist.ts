@@ -89,7 +89,7 @@ function searchTrack(
   const trackInfo = result.tracks.items[0];
 
   // トラックが取得可能な場合
-  if (trackInfo.uri && trackInfo.available_markets.includes('JP')) {
+  if (trackInfo && trackInfo.available_markets.includes('JP')) {
     return trackInfo.uri;
   } else {
     return '';
@@ -105,15 +105,16 @@ function addTracks(
   playlistId: string
 ): void {
   // リクエスト
-  const url = `https://api.spotify.com/v1//playlists/${playlistId}/tracks`;
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
     method: 'post',
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    payload: {
+    payload: JSON.stringify({
       uris: trackUris,
-    },
+      position: 0,
+    }),
   };
-  const response = UrlFetchApp.fetch(url, options);
+  UrlFetchApp.fetch(url, options);
 }
