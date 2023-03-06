@@ -1,24 +1,45 @@
+type AccessTokenResponse = {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+};
+
 /**
  * Spotifyに関する操作を行う関数
  * @param data string[][]
  * @return void
  */
 export function operateSpotify(data: string[][]): void {
+  // 定数
+  const ARTIST_NAME_INDEX = 1;
+  const TRACK_NAME_INDEX = 2;
+
+  // 環境変数の取得
+  const props = PropertiesService.getScriptProperties().getProperties();
+  const playlistId = props.PLAYLIST_ID;
+
   // アクセストークンを取得
   const accessToken = getAccessToken();
+
+  // 追加済みのTrackのリストを取得
+  const addedTrackUris = getAddedTracks(accessToken, playlistId);
 
   // 追加するTrackのUriを取得
   const trackUris = data
     .map((elm) => {
-      const artistName = elm[1];
-      const trackName = elm[2];
+      const artistName = elm[ARTIST_NAME_INDEX];
+      const trackName = elm[TRACK_NAME_INDEX];
       return searchTrack(accessToken, trackName, artistName);
     })
-    .filter((elm) => {
-      return elm !== '';
+    .filter((uri) => {
+      return uri !== '' && !addedTrackUris.includes(uri);
     });
 
-  addTracks(accessToken, trackUris);
+  // Trackをプレイリストに追加
+  trackUris.map((uri, index) => {
+    addTrack(accessToken, uri, index, playlistId);
+  });
 }
 
 /**
@@ -50,9 +71,53 @@ function getAccessToken(): string {
     },
   };
   const response = UrlFetchApp.fetch(TOKEN_URL, options);
-  const data = JSON.parse(response.getContentText());
+  const data: AccessTokenResponse = JSON.parse(response.getContentText());
 
   return data.access_token;
+}
+
+/**
+ * Spotify APIで、指定したプレイリストに現在されているTrackを取得する関数
+ * @param accessToken string
+ * @param playlistId string
+ */
+function getAddedTracks(accessToken: string, playlistId: string): string[] {
+  // 定数
+  const LIMIT = 50;
+
+  // 変数
+  const trackIds = [];
+
+  // nextがある場合ループする
+  while (true) {
+    // リクエスト
+    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=${LIMIT}`;
+    const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const response = UrlFetchApp.fetch(url, options);
+    const result: SpotifyApi.PlaylistTrackResponse = JSON.parse(
+      response.getContentText()
+    );
+
+    // Trackを追加
+    trackIds.push(
+      ...result.items
+        .map((item: SpotifyApi.PlaylistTrackObject) => {
+          if (item && item.track) return item.track.uri;
+          else return '';
+        })
+        .filter((uri) => uri)
+    );
+
+    // nextがない場合、ループを抜ける
+    if (!result.next) break;
+  }
+
+  return trackIds;
 }
 
 /**
@@ -79,13 +144,19 @@ function searchTrack(
     },
   };
   const response = UrlFetchApp.fetch(url, options);
-  const result = JSON.parse(response.getContentText());
+  const result: SpotifyApi.TrackSearchResponse = JSON.parse(
+    response.getContentText()
+  );
 
   // トラック情報の抽出
   const trackInfo = result.tracks.items[0];
 
   // トラックが取得可能な場合
-  if (trackInfo && trackInfo.available_markets.includes('JP')) {
+  if (
+    trackInfo &&
+    trackInfo.available_markets &&
+    trackInfo.available_markets.includes('JP')
+  ) {
     return trackInfo.uri;
   } else {
     return '';
@@ -93,13 +164,19 @@ function searchTrack(
 }
 
 /**
- *
+ * Spotify APIで指定したプレイリストにTrackを追加する関数
+ * @param accessToken string
+ * @param uri string
+ * @param position number
+ * @param playlistId string
+ * @returns void
  */
-function addTracks(accessToken: string, trackUris: string[]): void {
-  // 環境変数の取得
-  const props = PropertiesService.getScriptProperties().getProperties();
-  const playlistId = props.PLAYLIST_ID;
-
+function addTrack(
+  accessToken: string,
+  uri: string,
+  position: number,
+  playlistId: string
+): void {
   // リクエスト
   const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
@@ -107,9 +184,10 @@ function addTracks(accessToken: string, trackUris: string[]): void {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    muteHttpExceptions: true, // Track重複時のエラー回避のため
     payload: JSON.stringify({
-      uris: trackUris,
-      position: 0,
+      uris: [uri],
+      position: position,
     }),
   };
   UrlFetchApp.fetch(url, options);

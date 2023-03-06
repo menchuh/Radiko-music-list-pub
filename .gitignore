@@ -4,7 +4,7 @@
 # direcrory
 node_modules
 dist
+sample
 
 # file
 .clasp.json
-spotify.json
