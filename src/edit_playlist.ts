@@ -33,6 +33,7 @@ export function operateSpotify(data: string[][]): void {
       return searchTrack(accessToken, trackName, artistName);
     })
     .filter((uri) => {
+      // Trackの重複を防ぐ
       return uri !== '' && !addedTrackUris.includes(uri);
     });
 
@@ -180,7 +181,6 @@ function addTracks(
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    muteHttpExceptions: true, // Track重複時のエラー回避のため
     payload: JSON.stringify({
       uris: uris,
       position: 0,
