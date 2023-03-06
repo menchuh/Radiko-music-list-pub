@@ -37,9 +37,7 @@ export function operateSpotify(data: string[][]): void {
     });
 
   // Trackをプレイリストに追加
-  trackUris.map((uri, index) => {
-    addTrack(accessToken, uri, index, playlistId);
-  });
+  addTracks(accessToken, trackUris, playlistId);
 }
 
 /**
@@ -167,14 +165,12 @@ function searchTrack(
  * Spotify APIで指定したプレイリストにTrackを追加する関数
  * @param accessToken string
  * @param uri string
- * @param position number
  * @param playlistId string
  * @returns void
  */
-function addTrack(
+function addTracks(
   accessToken: string,
-  uri: string,
-  position: number,
+  uris: string[],
   playlistId: string
 ): void {
   // リクエスト
@@ -186,8 +182,8 @@ function addTrack(
     },
     muteHttpExceptions: true, // Track重複時のエラー回避のため
     payload: JSON.stringify({
-      uris: [uri],
-      position: position,
+      uris: uris,
+      position: 0,
     }),
   };
   UrlFetchApp.fetch(url, options);
