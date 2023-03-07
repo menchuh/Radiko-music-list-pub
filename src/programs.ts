@@ -54,6 +54,12 @@ export function getProgramsList(day: number): Program[] {
           start_time: '2100',
           end_time: '2200',
         },
+        {
+          title: 'MUSIC FREAKS',
+          station_id: StartionId.FM802,
+          start_time: '2200',
+          end_time: '2359',
+        },
       ],
       // 月曜日
       '1': [
