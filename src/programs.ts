@@ -25,10 +25,10 @@ export function getProgramsList(day: number): Program[] {
       // 日曜日
       '0': [
         {
-          title: '羽多野渉と古賀葵 コエ×コエ',
-          station_id: StartionId.FMT,
-          start_time: '0330',
-          end_time: '0400',
+          title: 'TAKUMIZM',
+          station_id: StartionId.BAYFM78,
+          start_time: '0030',
+          end_time: '0100',
         },
         {
           title: '阿川佐和子＆ふかわりょう 日曜のほとり',
@@ -71,10 +71,10 @@ export function getProgramsList(day: number): Program[] {
       // 木曜日
       '4': [
         {
-          title: '山崎怜奈の誰かに話したかったこと。',
-          station_id: StartionId.FMT,
-          start_time: '1300',
-          end_time: '1455',
+          title: 'JUMP OVER',
+          station_id: StartionId.FMJ,
+          start_time: '0200',
+          end_time: '0300',
         },
         {
           title: 'レック クリンぱっ!presents 佐藤満春のジャマしないラジオ',
@@ -98,6 +98,12 @@ export function getProgramsList(day: number): Program[] {
           end_time: '1230',
         },
         {
+          title: 'キリン一番搾り One More Pint!',
+          station_id: StartionId.NACK5,
+          start_time: '1800',
+          end_time: '1900',
+        },
+        {
           title: 'NICE POP RADIO',
           station_id: StartionId.ALPHASTATION,
           start_time: '2000',
@@ -111,6 +117,12 @@ export function getProgramsList(day: number): Program[] {
           station_id: StartionId.FMJ,
           start_time: '0230',
           end_time: '0300',
+        },
+        {
+          title: 'GOODYEAR MUSIC AIRSHIP～シティポップ レイディオ～',
+          station_id: StartionId.FMT,
+          start_time: '1100',
+          end_time: '1125',
         },
         {
           title: 'JA全農 COUNTDOWN JAPAN',
