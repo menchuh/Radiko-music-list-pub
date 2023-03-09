@@ -69,11 +69,24 @@ export function getProgramsList(day: number): Program[] {
           start_time: '0100',
           end_time: '0130',
         },
+        {
+          title: 'FLAG RADIO',
+          station_id: StartionId.ALPHASTATION,
+          start_time: '2100',
+          end_time: '2200',
+        },
       ],
       // 火曜日
       '2': [],
       // 水曜日
-      '3': [],
+      '3': [
+        {
+          title: 'SPARK',
+          station_id: StartionId.FMJ,
+          start_time: '0000',
+          end_time: '0100',
+        },
+      ],
       // 木曜日
       '4': [
         {
@@ -115,20 +128,32 @@ export function getProgramsList(day: number): Program[] {
           start_time: '2000',
           end_time: '2100',
         },
+        {
+          title: 'J-WAVE MONTHLY SELECTION',
+          station_id: StartionId.FMJ,
+          start_time: '2200',
+          end_time: '2230',
+        },
+        {
+          title: 'Okazaki Radio Channel',
+          station_id: StartionId.ALPHASTATION,
+          start_time: '2200',
+          end_time: '2300',
+        },
       ],
       // 土曜日
       '6': [
+        {
+          title: 'WATASHITACHI NO SLEEPOVER',
+          station_id: StartionId.FMJ,
+          start_time: '0130',
+          end_time: '0200',
+        },
         {
           title: 'FLIP SIDE PLANET',
           station_id: StartionId.FMJ,
           start_time: '0230',
           end_time: '0300',
-        },
-        {
-          title: 'GOODYEAR MUSIC AIRSHIP～シティポップ レイディオ～',
-          station_id: StartionId.FMT,
-          start_time: '1100',
-          end_time: '1125',
         },
         {
           title: 'JA全農 COUNTDOWN JAPAN',
