@@ -132,10 +132,15 @@ function searchTrack(
   artist: string
 ): string {
   // クエリストリング
-  const QUERY_STRING = encodeURIComponent(`track:${track} artist:${artist}`);
+  let queryString = '';
+  if (isMultiByteStr(track) || isMultiByteStr(artist)) {
+    queryString = `${track} ${artist}`;
+  } else {
+    queryString = encodeURIComponent(`track:${track} artist:${artist}`);
+  }
 
   // リクエスト
-  const url = `https://api.spotify.com/v1/search?q=${QUERY_STRING}&type=track`;
+  const url = `https://api.spotify.com/v1/search?q=${queryString}&type=track`;
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
     method: 'get',
     headers: {
@@ -187,4 +192,11 @@ function addTracks(
     }),
   };
   UrlFetchApp.fetch(url, options);
+}
+
+function isMultiByteStr(str: string) {
+  // 正規表現
+  const multibyteRegExp = new RegExp(/^[^\x01-\x7E\uFF61-\uFF9F]+$/);
+
+  return multibyteRegExp.test(str);
 }

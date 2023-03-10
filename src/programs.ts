@@ -75,9 +75,22 @@ export function getProgramsList(day: number): Program[] {
           start_time: '2100',
           end_time: '2200',
         },
+        {
+          title: 'ROCK KIDS 802 -OCHIKEN Goes ON!!-',
+          station_id: StartionId.FM802,
+          start_time: '2200',
+          end_time: '2300',
+        },
       ],
       // 火曜日
-      '2': [],
+      '2': [
+        {
+          title: 'ROCK KIDS 802 -OCHIKEN Goes ON!!-',
+          station_id: StartionId.FM802,
+          start_time: '2200',
+          end_time: '2300',
+        },
+      ],
       // 水曜日
       '3': [
         {
@@ -85,6 +98,12 @@ export function getProgramsList(day: number): Program[] {
           station_id: StartionId.FMJ,
           start_time: '0000',
           end_time: '0100',
+        },
+        {
+          title: 'ROCK KIDS 802 -OCHIKEN Goes ON!!-',
+          station_id: StartionId.FM802,
+          start_time: '2200',
+          end_time: '2300',
         },
       ],
       // 木曜日
@@ -102,10 +121,10 @@ export function getProgramsList(day: number): Program[] {
           end_time: '2300',
         },
         {
-          title: '平祐奈の凸凹ラジオ',
-          station_id: StartionId.INT,
-          start_time: '2300',
-          end_time: '2330',
+          title: 'ROCK KIDS 802 -OCHIKEN Goes ON!!-',
+          station_id: StartionId.FM802,
+          start_time: '2200',
+          end_time: '2300',
         },
       ],
       // 金曜日
