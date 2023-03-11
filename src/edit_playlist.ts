@@ -159,7 +159,8 @@ function searchTrack(
   if (
     trackInfo &&
     trackInfo.available_markets &&
-    trackInfo.available_markets.includes('JP')
+    trackInfo.available_markets.includes('JP') &&
+    trackInfo.name === track
   ) {
     return trackInfo.uri;
   } else {
