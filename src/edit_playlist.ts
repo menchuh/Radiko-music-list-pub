@@ -134,7 +134,7 @@ function searchTrack(
   // クエリストリング
   let queryString = '';
   if (isMultiByteStr(track) || isMultiByteStr(artist)) {
-    queryString = `${track} ${artist}`;
+    queryString = encodeURIComponent(`${track} ${artist}`);
   } else {
     queryString = encodeURIComponent(`track:${track} artist:${artist}`);
   }

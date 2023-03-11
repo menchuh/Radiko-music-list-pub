@@ -83,14 +83,7 @@ export function getProgramsList(day: number): Program[] {
         },
       ],
       // 火曜日
-      '2': [
-        {
-          title: 'ROCK KIDS 802 -OCHIKEN Goes ON!!-',
-          station_id: StartionId.FM802,
-          start_time: '2200',
-          end_time: '2300',
-        },
-      ],
+      '2': [],
       // 水曜日
       '3': [
         {
@@ -98,12 +91,6 @@ export function getProgramsList(day: number): Program[] {
           station_id: StartionId.FMJ,
           start_time: '0000',
           end_time: '0100',
-        },
-        {
-          title: 'ROCK KIDS 802 -OCHIKEN Goes ON!!-',
-          station_id: StartionId.FM802,
-          start_time: '2200',
-          end_time: '2300',
         },
       ],
       // 木曜日
@@ -120,12 +107,6 @@ export function getProgramsList(day: number): Program[] {
           start_time: '2200',
           end_time: '2300',
         },
-        {
-          title: 'ROCK KIDS 802 -OCHIKEN Goes ON!!-',
-          station_id: StartionId.FM802,
-          start_time: '2200',
-          end_time: '2300',
-        },
       ],
       // 金曜日
       '5': [
@@ -134,12 +115,6 @@ export function getProgramsList(day: number): Program[] {
           station_id: StartionId.FMT,
           start_time: '1200',
           end_time: '1230',
-        },
-        {
-          title: 'キリン一番搾り One More Pint!',
-          station_id: StartionId.NACK5,
-          start_time: '1800',
-          end_time: '1900',
         },
         {
           title: 'NICE POP RADIO',
@@ -152,12 +127,6 @@ export function getProgramsList(day: number): Program[] {
           station_id: StartionId.FMJ,
           start_time: '2200',
           end_time: '2230',
-        },
-        {
-          title: 'Okazaki Radio Channel',
-          station_id: StartionId.ALPHASTATION,
-          start_time: '2200',
-          end_time: '2300',
         },
       ],
       // 土曜日
