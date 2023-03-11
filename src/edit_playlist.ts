@@ -84,37 +84,11 @@ function getAddedTracks(accessToken: string, playlistId: string): string[] {
   // 定数
   const LIMIT = 50;
 
-  // 変数
-  const trackIds = [];
+  // URL生成
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=${LIMIT}`;
 
-  // nextがある場合ループする
-  while (true) {
-    // リクエスト
-    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=${LIMIT}`;
-    const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
-      method: 'get',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
-    const response = UrlFetchApp.fetch(url, options);
-    const result: SpotifyApi.PlaylistTrackResponse = JSON.parse(
-      response.getContentText()
-    );
-
-    // Trackを追加
-    trackIds.push(
-      ...result.items
-        .map((item: SpotifyApi.PlaylistTrackObject) => {
-          if (item && item.track) return item.track.uri;
-          else return '';
-        })
-        .filter((uri) => uri)
-    );
-
-    // nextがない場合、ループを抜ける
-    if (!result.next) break;
-  }
+  // Track ID
+  const trackIds = fetchPlaylistItems(accessToken, url, []);
 
   return trackIds;
 }
@@ -159,8 +133,7 @@ function searchTrack(
   if (
     trackInfo &&
     trackInfo.available_markets &&
-    trackInfo.available_markets.includes('JP') &&
-    trackInfo.name === track
+    trackInfo.available_markets.includes('JP')
   ) {
     return trackInfo.uri;
   } else {
@@ -193,6 +166,41 @@ function addTracks(
     }),
   };
   UrlFetchApp.fetch(url, options);
+}
+
+function fetchPlaylistItems(
+  accessToken: string,
+  url: string,
+  trackIds: string[]
+): string[] {
+  // APIリクエスト
+  const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  const response = UrlFetchApp.fetch(url, options);
+  const result: SpotifyApi.PlaylistTrackResponse = JSON.parse(
+    response.getContentText()
+  );
+
+  // Trackを追加
+  trackIds.push(
+    ...result.items
+      .map((item: SpotifyApi.PlaylistTrackObject) => {
+        if (item && item.track) return item.track.uri;
+        else return '';
+      })
+      .filter((uri) => uri)
+  );
+
+  // nextがある場合再帰処理
+  if (result.next) {
+    fetchPlaylistItems(accessToken, result.next, trackIds);
+  }
+
+  return trackIds;
 }
 
 function isMultiByteStr(str: string) {
