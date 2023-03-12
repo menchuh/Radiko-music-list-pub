@@ -31,12 +31,6 @@ export function getProgramsList(day: number): Program[] {
           end_time: '0100',
         },
         {
-          title: '阿川佐和子＆ふかわりょう 日曜のほとり',
-          station_id: StartionId.QRR,
-          start_time: '1000',
-          end_time: '1200',
-        },
-        {
           title: 'UR LIFESTYLE COLLEGE',
           station_id: StartionId.FMJ,
           start_time: '1800',
@@ -54,12 +48,6 @@ export function getProgramsList(day: number): Program[] {
           start_time: '2100',
           end_time: '2200',
         },
-        {
-          title: 'MUSIC FREAKS',
-          station_id: StartionId.FM802,
-          start_time: '2200',
-          end_time: '2359',
-        },
       ],
       // 月曜日
       '1': [
@@ -74,12 +62,6 @@ export function getProgramsList(day: number): Program[] {
           station_id: StartionId.ALPHASTATION,
           start_time: '2100',
           end_time: '2200',
-        },
-        {
-          title: 'ROCK KIDS 802 -OCHIKEN Goes ON!!-',
-          station_id: StartionId.FM802,
-          start_time: '2200',
-          end_time: '2300',
         },
       ],
       // 火曜日
@@ -132,12 +114,6 @@ export function getProgramsList(day: number): Program[] {
       // 土曜日
       '6': [
         {
-          title: 'WATASHITACHI NO SLEEPOVER',
-          station_id: StartionId.FMJ,
-          start_time: '0130',
-          end_time: '0200',
-        },
-        {
           title: 'FLIP SIDE PLANET',
           station_id: StartionId.FMJ,
           start_time: '0230',
@@ -148,12 +124,6 @@ export function getProgramsList(day: number): Program[] {
           station_id: StartionId.FMT,
           start_time: '1300',
           end_time: '1353',
-        },
-        {
-          title: 'NTT Group BIBLIOTHECA 〜THE WEEKEND LIBRARY〜',
-          station_id: StartionId.FMJ,
-          start_time: '1500',
-          end_time: '1600',
         },
       ],
     },
