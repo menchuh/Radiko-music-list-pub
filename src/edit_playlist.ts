@@ -31,11 +31,11 @@ export function operateSpotify(data: string[][]): void {
   const accessToken = getAccessToken();
 
   // 追加済みのTrackのリストを取得
-  const addedTracks = getAddedTracks(accessToken, playlistId);
+  const appendedTracks = getAddedTracks(accessToken, playlistId);
 
   // 一定期間以上前に追加されたTrackを削除
   const now = dayjs();
-  const urisToDelete = addedTracks
+  const urisToDelete = appendedTracks
     .filter((track) => now.diff(dayjs(track.added_at), 'day') > OLDER_THAN_DAYS)
     .map((track) => track.uri);
   if (urisToDelete.length > 0) {
@@ -43,12 +43,12 @@ export function operateSpotify(data: string[][]): void {
   }
 
   // プレイリストに存在するTrackのuriを取得
-  const addedTrackUris = addedTracks
+  const appendedTrackUris = appendedTracks
     .filter((t) => !urisToDelete.includes(t.uri))
     .map((t) => t.uri);
 
   // 追加するTrackのUriを取得
-  const urisToAdd = data
+  const urisToAppend = data
     .map((elm) => {
       const artistName = elm[ARTIST_NAME_INDEX];
       const trackName = elm[TRACK_NAME_INDEX];
@@ -56,11 +56,11 @@ export function operateSpotify(data: string[][]): void {
     })
     .filter((uri) => {
       // Trackの重複を防ぐ
-      return uri !== '' && !addedTrackUris.includes(uri);
+      return uri !== '' && !appendedTrackUris.includes(uri);
     });
 
   // Trackをプレイリストに追加
-  addTracks(accessToken, urisToAdd, playlistId);
+  addTracks(accessToken, urisToAppend, playlistId);
 }
 
 /**
