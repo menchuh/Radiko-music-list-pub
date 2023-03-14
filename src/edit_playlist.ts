@@ -1,8 +1,15 @@
+import dayjs from 'dayjs';
+
 type AccessTokenResponse = {
   access_token: string;
   token_type: string;
   expires_in: number;
   scope: string;
+};
+
+type AddedTrackInfo = {
+  uri: string;
+  added_at: string;
 };
 
 /**
@@ -14,6 +21,7 @@ export function operateSpotify(data: string[][]): void {
   // 定数
   const ARTIST_NAME_INDEX = 1;
   const TRACK_NAME_INDEX = 2;
+  const OLDER_THAN_DAYS = 14;
 
   // 環境変数の取得
   const props = PropertiesService.getScriptProperties().getProperties();
@@ -23,10 +31,24 @@ export function operateSpotify(data: string[][]): void {
   const accessToken = getAccessToken();
 
   // 追加済みのTrackのリストを取得
-  const addedTrackUris = getAddedTracks(accessToken, playlistId);
+  const addedTracks = getAddedTracks(accessToken, playlistId);
+
+  // 一定期間以上前に追加されたTrackを削除
+  const now = dayjs();
+  const urisToDelete = addedTracks
+    .filter((track) => now.diff(dayjs(track.added_at), 'day') > OLDER_THAN_DAYS)
+    .map((track) => track.uri);
+  if (urisToDelete.length > 0) {
+    deleteTracks(accessToken, urisToDelete, playlistId);
+  }
+
+  // プレイリストに存在するTrackのuriを取得
+  const addedTrackUris = addedTracks
+    .filter((t) => !urisToDelete.includes(t.uri))
+    .map((t) => t.uri);
 
   // 追加するTrackのUriを取得
-  const trackUris = data
+  const urisToAdd = data
     .map((elm) => {
       const artistName = elm[ARTIST_NAME_INDEX];
       const trackName = elm[TRACK_NAME_INDEX];
@@ -38,7 +60,7 @@ export function operateSpotify(data: string[][]): void {
     });
 
   // Trackをプレイリストに追加
-  addTracks(accessToken, trackUris, playlistId);
+  addTracks(accessToken, urisToAdd, playlistId);
 }
 
 /**
@@ -79,18 +101,20 @@ function getAccessToken(): string {
  * Spotify APIで、指定したプレイリストに現在されているTrackを取得する関数
  * @param accessToken string
  * @param playlistId string
+ * @return AddedTrackInfo[]
  */
-function getAddedTracks(accessToken: string, playlistId: string): string[] {
+function getAddedTracks(
+  accessToken: string,
+  playlistId: string
+): AddedTrackInfo[] {
   // 定数
   const LIMIT = 50;
-
   // URL生成
   const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=${LIMIT}`;
-
   // Track ID
-  const trackIds = fetchPlaylistItems(accessToken, url, []);
+  const tracks = fetchPlaylistItems(accessToken, url, []);
 
-  return trackIds;
+  return tracks;
 }
 
 /**
@@ -141,6 +165,25 @@ function searchTrack(
   }
 }
 
+function deleteTracks(
+  accessToken: string,
+  uris: string[],
+  playlistId: string
+): void {
+  // リクエスト
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+  const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
+    method: 'delete',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    payload: JSON.stringify({
+      uris: uris,
+    }),
+  };
+  UrlFetchApp.fetch(url, options);
+}
+
 /**
  * Spotify APIで指定したプレイリストにTrackを追加する関数
  * @param accessToken string
@@ -171,8 +214,8 @@ function addTracks(
 function fetchPlaylistItems(
   accessToken: string,
   url: string,
-  trackIds: string[]
-): string[] {
+  tracks: AddedTrackInfo[]
+): AddedTrackInfo[] {
   // APIリクエスト
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
     method: 'get',
@@ -186,21 +229,30 @@ function fetchPlaylistItems(
   );
 
   // Trackを追加
-  trackIds.push(
+  tracks.push(
     ...result.items
       .map((item: SpotifyApi.PlaylistTrackObject) => {
-        if (item && item.track) return item.track.uri;
-        else return '';
+        if (item && item.track) {
+          return {
+            uri: item.track.uri,
+            added_at: item.added_at,
+          };
+        } else {
+          return {
+            uri: '',
+            added_at: '',
+          };
+        }
       })
-      .filter((uri) => uri)
+      .filter((data) => !!data.uri && !!data.added_at)
   );
 
   // nextがある場合再帰処理
   if (result.next) {
-    fetchPlaylistItems(accessToken, result.next, trackIds);
+    fetchPlaylistItems(accessToken, result.next, tracks);
   }
 
-  return trackIds;
+  return tracks;
 }
 
 function isMultiByteStr(str: string) {
